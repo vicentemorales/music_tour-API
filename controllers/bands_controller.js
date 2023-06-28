@@ -1,7 +1,7 @@
 // DEPENDENCIES
 const bands = require('express').Router()
 const db = require('../models')
-const { Band } = db 
+const { Band, MeetGreet} = db 
 const { Op } = require('sequelize')
 
 
@@ -26,10 +26,11 @@ bands.get('/', async (req, res) => {
 })
 
 // FIND A SPECIFIC BAND
-bands.get('/:id', async (req, res) => {
+bands.get('/:name', async (req, res) => {
     try {
         const foundBand = await Band.findOne({
-            where: { band_id: req.params.id }
+            where: { name: req.params.name },
+            include: { model: MeetGreet, as: "meet_greets"}
         });
         if (!foundBand){
             res.status(400).json({message: 'Could not find bad'})
